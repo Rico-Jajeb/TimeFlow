@@ -1,7 +1,9 @@
 <template>
   <main class="">
     <div class="clock-container">
-      <div class="clock">
+      <div
+        class="clock h-[300px] w-[300px] md:h-[415px] md:w-[410px] border-5 md:border-8 border-solid border-[#333]"
+      >
         <!-- Hour and Minute Tick Markers -->
         <div
           v-for="n in 60"
@@ -31,6 +33,21 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
+
+// Screen size state
+const screenWidth = ref(window.innerWidth)
+
+const handleResize = () => {
+  screenWidth.value = window.innerWidth
+}
+
+// Listen for resize
+onMounted(() => {
+  window.addEventListener('resize', handleResize)
+})
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+})
 
 // Single source of truth for current time
 const currentTime = ref<Date>(new Date())
@@ -80,8 +97,19 @@ const getTickStyle = (n: number) => {
   return `transform: rotate(${angle}deg) translateX(-50%)`
 }
 
+// Responsive number placement
 const getNumberStyle = (n: number) => {
   const angle = (n * 30 - 90) * (Math.PI / 180)
+
+  // if width < 640px → small clock
+  if (screenWidth.value < 640) {
+    const radius = 120
+    const x = 155 + radius * Math.cos(angle) - 12
+    const y = 150 + radius * Math.sin(angle) - 12
+    return `position: absolute; left: ${x}px; top: ${y}px;`
+  }
+
+  // large clock
   const radius = 160
   const x = 200 + radius * Math.cos(angle) - 12
   const y = 200 + radius * Math.sin(angle) - 12
@@ -91,7 +119,7 @@ const getNumberStyle = (n: number) => {
 let interval: number
 onMounted(async () => {
   await fetchTime()
-  interval = setInterval(updateClock, 1000) // update every second
+  interval = setInterval(updateClock, 1000)
 })
 
 onUnmounted(() => clearInterval(interval))
@@ -106,9 +134,7 @@ onUnmounted(() => clearInterval(interval))
 
 /* Analog Clock Styles */
 .clock {
-  width: 410px;
-  height: 415px;
-  border: 8px solid #333;
+  /* border: 8px solid #333; */
   border-radius: 50%;
   position: relative;
   background: #fff;
@@ -184,5 +210,21 @@ onUnmounted(() => clearInterval(interval))
   font-size: 28px;
   font-weight: bold;
   font-family: monospace;
+}
+
+/* Small screen adjustments */
+@media (max-width: 640px) {
+  .hour-tick {
+    height: 15px; /* smaller for compact screens */
+    background: #333; /* optional tweak */
+  }
+
+  .tick {
+    transform-origin: center 145px;
+  }
+  .number {
+    font-weight: bold;
+    font-size: 12px;
+  }
 }
 </style>
