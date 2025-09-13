@@ -104,7 +104,7 @@ const getNumberStyle = (n: number) => {
   // if width < 640px → small clock
   if (screenWidth.value < 640) {
     const radius = 120
-    const x = 155 + radius * Math.cos(angle) - 12
+    const x = 153 + radius * Math.cos(angle) - 12
     const y = 150 + radius * Math.sin(angle) - 12
     return `position: absolute; left: ${x}px; top: ${y}px;`
   }
