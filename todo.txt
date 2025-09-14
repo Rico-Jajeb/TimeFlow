@@ -1,0 +1,128 @@
+<template>
+  <div class="flex flex-col items-center gap-4 p-6">
+    <!-- Time Input -->
+    <div class="flex gap-2 items-center">
+      <input
+        type="number"
+        v-model.number="hoursInput"
+        min="0"
+        placeholder="Hours"
+        class="border p-2 rounded w-24"
+      />
+      <input
+        type="number"
+        v-model.number="minutesInput"
+        min="0"
+        max="59"
+        placeholder="Minutes"
+        class="border p-2 rounded w-24"
+      />
+      <input
+        type="number"
+        v-model.number="secondsInput"
+        min="0"
+        max="59"
+        placeholder="Seconds"
+        class="border p-2 rounded w-24"
+      />
+    </div>
+
+    <!-- Timer Display -->
+    <div class="text-4xl font-mono">
+      {{ formattedTime }}
+    </div>
+
+    <!-- Controls -->
+    <div class="flex gap-3">
+      <button @click="startTimer" class="px-4 py-2 bg-green-500 text-white rounded">Start</button>
+      <button @click="pauseTimer" class="px-4 py-2 bg-yellow-500 text-white rounded">Pause</button>
+      <button @click="resetTimer" class="px-4 py-2 bg-red-500 text-white rounded">Reset</button>
+      <button @click="stopAlarm">Stop Music</button>
+    </div>
+  </div>
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onUnmounted } from 'vue'
+import { useToast } from 'primevue/usetoast'
+
+import song from '@/assets/MinionBanana.mp3'
+const audio = new Audio(song)
+const toast = useToast()
+const totalSeconds = ref(0)
+
+// null so inputs start empty (not 0)
+const hoursInput = ref<number | null>(null)
+const minutesInput = ref<number | null>(null)
+const secondsInput = ref<number | null>(null)
+let intervalId: number | null = null
+
+// Format time into hh:mm:ss
+const formattedTime = computed(() => {
+  const hrs = Math.floor(totalSeconds.value / 3600)
+    .toString()
+    .padStart(2, '0')
+  const mins = Math.floor((totalSeconds.value % 3600) / 60)
+    .toString()
+    .padStart(2, '0')
+  const secs = (totalSeconds.value % 60).toString().padStart(2, '0')
+  return `${hrs}:${mins}:${secs}`
+})
+
+const startTimer = () => {
+  if (intervalId === null && totalSeconds.value === 0) {
+    totalSeconds.value =
+      (hoursInput.value ?? 0) * 3600 + (minutesInput.value ?? 0) * 60 + (secondsInput.value ?? 0)
+  }
+
+  if (intervalId === null && totalSeconds.value > 0) {
+    intervalId = window.setInterval(() => {
+      if (totalSeconds.value > 0) {
+        totalSeconds.value--
+      } else {
+        pauseTimer()
+        // alert('⏰ Time’s up!')
+
+        // const audio = new Audio(song)
+        // audio.play()
+        audio.currentTime = 0 // restart from beginning
+        audio.play()
+        toast.add({
+          severity: 'success',
+          summary: '⏰ Time’s up!',
+          detail: 'Timer has reached zero!',
+          life: 40900,
+        })
+      }
+    }, 1000)
+  }
+}
+
+// stop alarm (button trigger)
+const stopAlarm = () => {
+  audio.pause()
+  audio.currentTime = 0
+}
+
+const pauseTimer = () => {
+  if (intervalId !== null) {
+    clearInterval(intervalId)
+    intervalId = null
+  }
+}
+
+const resetTimer = () => {
+  pauseTimer()
+  totalSeconds.value = 0
+}
+onUnmounted(() => pauseTimer())
+</script>
+
+<style scoped>
+button {
+  transition: all 0.2s ease-in-out;
+}
+button:hover {
+  opacity: 0.8;
+}
+</style>

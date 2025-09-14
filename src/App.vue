@@ -1,10 +1,14 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
+import { useToast } from 'primevue/usetoast'
+
+const toast = useToast()
 </script>
 
 <template>
   <RouterView />
+  <Toast />
 </template>
 
 <style scoped>
