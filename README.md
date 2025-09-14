@@ -1,39 +1,51 @@
 # TimeFlow
 
-This template should help get you started developing with Vue 3 in Vite.
+TimeFlow is a modern Vue.js application that displays the current time in both analog and digital formats, features a customizable timer, and alerts users with notifications and ringtones when the timer ends. It uses Pinia for state management, Axios to fetch time data from an API, and provides an interactive, user-friendly interface for tracking time efficiently.
 
-## Recommended IDE Setup
+## Features
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+- 🕒 **Analog & Digital Clock** display
+- ⏳ **Timer** with notification + ringtone on completion
+- 🌐 **Time API integration** (fetches accurate time via Axios)
+- 📦 **State management with Pinia**
+- 🔔 **Toast notifications** when the timer ends
 
-## Type Support for `.vue` Imports in TS
+## Tech Stack
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- [Vue 3](https://vuejs.org/)
+- [Pinia](https://pinia.vuejs.org/) (state management)
+- [Axios](https://axios-http.com/) (API requests)
+- [PrimeVue](https://primevue.org/) (UI components, if used)
 
-## Customize configuration
+## Deployment
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+To deploy this project run
 
-## Project Setup
+```bash
+  npm run deploy
+```
 
-```sh
+# Clone the repo
+
+git clone https://github.com/Rico-Jajeb/TimeFlow
+cd timeflow
+
+# Install dependencies
+
 npm install
-```
 
-### Compile and Hot-Reload for Development
+# Run the project
 
-```sh
 npm run dev
-```
 
-### Type-Check, Compile and Minify for Production
+## 🔧 Usage
 
-```sh
-npm run build
-```
+This project is used by the following companies:
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+1. View the **real-time analog and digital clock**.
+2. Set a **timer** for your desired duration.
+3. When time’s up, you’ll get a **toast notification** and hear a **ringtone**.
 
-```sh
-npm run test:unit
-```
+## Authors
+
+- [@Rico Jajeb Tayobong](https://github.com/Rico-Jajeb)
